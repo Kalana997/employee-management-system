@@ -1,0 +1,706 @@
+
+
+<div class="employee-container">
+
+<div class="header">
+
+    <div>
+
+        <h1>👨‍💼 Employee Management Dashboard</h1>
+
+        <p class="subtitle">
+            Welcome Back • Manage your employees efficiently
+        </p>
+
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            class="theme-btn"
+            (click)="toggleTheme()">
+
+            {{ isDarkMode ? '🌙' : '☀️' }}
+
+        </button>
+
+       @if(isAdmin){
+
+        <button
+             class="add-btn"
+             (click)="openAddForm()">
+
+            + Add Employee
+
+        </button>
+
+}
+        <button
+            class="pdf-btn"
+            (click)="exportToPDF()">
+
+            📄 Export PDF
+
+        </button>
+
+        <button
+            class="logout-btn"
+            (click)="logout()">
+
+            🚪 Logout
+
+        </button>
+
+    </div>
+
+</div>
+
+
+  <div class="dashboard-cards">
+
+    <div class="dashboard-card employees-card">
+        <h3>👥 Total Employees</h3>
+        <h2>{{ employees.length }}</h2>
+    </div>
+
+    <div class="dashboard-card departments-card">
+        <h3>🏢 Total Departments</h3>
+        <h2>{{ totalDepartments }}</h2>
+    </div>
+
+    <div class="dashboard-card salary-card">
+        <h3>💰 Total Salary</h3>
+        <h2>
+            Rs. {{ totalSalary | number }}
+        </h2>
+    </div>
+
+    <div class="dashboard-card average-card">
+        <h3>📊 Average Salary</h3>
+        <h2>
+            Rs. {{ averageSalary | number }}
+        </h2>
+    </div>
+
+</div>
+    
+
+    <div class="activity-card">
+
+    <h3>📋 Recent Activities</h3>
+
+    @if(activityLogs.length === 0){
+
+        <p>No recent activities.</p>
+
+    }
+
+    @for(log of activityLogs; track $index){
+
+        <div class="activity-item">
+
+            {{ log }}
+
+        </div>
+
+    }
+
+</div>
+
+<div class="top-bar">
+
+    <div class="search-box">
+
+        <input
+            type="text"
+            placeholder="🔍 Search employee..."
+            [(ngModel)]="searchText">
+
+        <select [(ngModel)]="selectedDepartment">
+
+            @for (department of departments; track department) {
+
+                <option [value]="department">
+                    {{ department }}
+                </option>
+
+            }
+
+        </select>
+
+        <select [(ngModel)]="selectedSalary">
+
+            <option value="All">All Salaries</option>
+
+            <option value="below50000">Below Rs. 50,000</option>
+
+            <option value="50000to100000">Rs. 50,000 - 100,000</option>
+
+            <option value="100001to150000">Rs. 100,001 - 150,000</option>
+
+            <option value="above150000">Above Rs. 150,000</option>
+
+       </select>
+
+        <button
+            class="sort-btn"
+            (click)="toggleSort()">
+
+            {{ sortOrder === 'asc' ? 'A → Z' : 'Z → A' }}
+
+        </button>
+
+    </div>
+
+    <div class="clock-card">
+
+        <h4>{{ currentDate }}</h4>
+
+        <span>{{ currentTime }}</span>
+
+    </div>
+
+</div>
+  
+
+    @if(successMessage){
+
+    <div
+      class="success-toast"
+      [ngClass]="{
+      'add-toast': messageType === 'add',
+      'update-toast': messageType === 'update',
+      'delete-toast': messageType === 'delete'
+      }">
+             {{ successMessage }}
+   </div>
+
+    }
+
+    @if(showAddForm){
+
+    <form [formGroup]="employeeForm" class="add-form">
+
+        <h2>
+
+            @if(isEditMode){
+                ✏️ Edit Employee
+            } @else {
+                ➕ Add New Employee
+            }
+
+        </h2>
+
+        <div class="form-grid">
+
+    <div class="form-group">
+
+        <label>Employee Name</label>
+
+        <input
+            type="text"
+            formControlName="name"
+            placeholder="Enter employee name"
+            (keydown)="allowOnlyLetters($event)"
+            (keyup)="capitalizeFirstLetter('name')"
+            (paste)="blockPaste($event)">
+
+        @if(employeeForm.controls.name.touched &&
+        employeeForm.controls.name.invalid){
+
+            <small class="error">
+
+                @if(employeeForm.controls.name.errors?.['required']){
+                    Name is required.
+                }
+
+                @if(employeeForm.controls.name.errors?.['minlength']){
+                    Minimum 3 characters required.
+                }
+
+                @if(employeeForm.controls.name.errors?.['maxlength']){
+                    Maximum 50 characters allowed.
+                }
+
+                @if(employeeForm.controls.name.errors?.['pattern']){
+                    Only letters and spaces are allowed.
+                }
+
+            </small>
+
+        }
+
+    </div>
+
+    <div class="form-group">
+
+        <label>Email Address</label>
+<input
+    type="email"
+    formControlName="email"
+    placeholder="Enter email address">
+
+    @if(employeeForm.controls.email.touched &&
+    employeeForm.controls.email.invalid){
+
+    <small class="error">
+
+        @if(employeeForm.controls.email.errors?.['required']){
+            Email is required.
+        }
+
+        @if(employeeForm.controls.email.errors?.['email']){
+            Enter a valid email address.
+        }
+
+        @if(employeeForm.controls.email.errors?.['duplicate']){
+            Email already exists.
+        }
+
+    </small>
+
+}
+        
+
+    </div>
+
+    <div class="form-group">
+
+        <label>Phone Number</label>
+
+        <input
+            type="text"
+            formControlName="phone"
+            placeholder="Enter phone number"
+            maxlength="10"
+            (keydown)="allowOnlyNumbers($event)"
+            (paste)="blockPaste($event)">
+
+        @if(employeeForm.controls.phone.touched &&
+        employeeForm.controls.phone.invalid){
+
+<small class="error">
+
+    @if(employeeForm.controls.phone.errors?.['required']){
+        Phone number is required.
+    }
+
+    @if(employeeForm.controls.phone.errors?.['pattern']){
+        Enter a valid 10-digit phone number.
+    }
+
+    @if(employeeForm.controls.phone.errors?.['duplicate']){
+        Phone number already exists.
+    }
+
+</small>
+
+        }
+
+    </div>
+
+    <div class="form-group">
+
+        <label>Department</label>
+
+        <input
+            type="text"
+            formControlName="department"
+            placeholder="Enter department"
+            (keydown)="allowOnlyLetters($event)"
+            (keyup)="capitalizeFirstLetter('department')"
+            (paste)="blockPaste($event)">
+
+        @if(employeeForm.controls.department.touched &&
+        employeeForm.controls.department.invalid){
+
+            <small class="error">
+
+                @if(employeeForm.controls.department.errors?.['required']){
+                    Department is required.
+                }
+
+                @if(employeeForm.controls.department.errors?.['pattern']){
+                    Only letters and spaces are allowed.
+                }
+
+            </small>
+
+        }
+
+    </div>
+
+    <div class="form-group full-width">
+
+        <label>Monthly Salary (LKR)</label>
+
+        <input
+            type="number"
+            formControlName="salary"
+            placeholder="Enter salary"
+            (keydown)="allowOnlyNumbers($event)"
+            (paste)="blockPaste($event)">
+
+        @if(employeeForm.controls.salary.touched &&
+        employeeForm.controls.salary.invalid){
+
+            <small class="error">
+
+                @if(employeeForm.controls.salary.errors?.['required']){
+                    Salary is required.
+                }
+
+                @if(employeeForm.controls.salary.errors?.['min']){
+                    Salary must be at least Rs.1000.
+                }
+
+                @if(employeeForm.controls.salary.errors?.['max']){
+                    Salary must be less than Rs.1,000,000.
+                }
+
+            </small>
+
+        }
+
+    </div>
+
+</div>
+
+        <div class="form-group full-width">
+
+    <label>Employee Photo</label>
+
+    <input
+        type="file"
+        accept="image/*"
+        (change)="onImageSelected($event)">
+
+    @if(selectedImage){
+
+        <div class="image-preview">
+
+            <img
+                [src]="selectedImage"
+                alt="Preview">
+
+        </div>
+
+    }
+
+</div>
+
+        <div class="button-group">
+
+            <button
+                type="button"
+                class="save-btn"
+                (click)="saveEmployee()"
+                [disabled]="employeeForm.invalid">
+
+                @if(isEditMode){
+                    💾 Update Employee
+                } @else {
+                    💾 Save Employee
+                }
+
+            </button>
+
+            <button
+                type="button"
+                class="cancel-btn"
+                (click)="cancel()">
+
+                ✖ Cancel
+
+            </button>
+
+        </div>
+
+    </form>
+
+    }
+
+
+<div class="table-container">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+               <th>Profile</th>
+                 <th>ID</th>
+                 <th>Name</th>
+                 <th>Email</th>
+                 <th>Phone</th>
+                 <th>Department</th>
+                 <th>Salary</th>
+                 <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+          @for (employee of paginatedEmployees; track employee.id) {
+
+            <tr>
+
+                <!-- Avatar -->
+
+               <td>
+
+    @if(employee.photo){
+
+        <img
+            [src]="employee.photo"
+            class="profile-photo"
+            alt="Employee">
+
+    } @else {
+
+        <div class="avatar">
+
+            {{ employee.name.charAt(0).toUpperCase() }}
+
+        </div>
+
+    }
+
+                </td>
+
+                <!-- ID -->
+
+                <td>
+
+                    #{{ employee.id }}
+
+                </td>
+
+                <!-- Name -->
+
+                <td>
+                  <strong>
+                   {{ employee.name }}
+                 </strong>
+               </td>
+
+                <!-- Email -->
+
+                <td>
+                    {{ employee.email }}
+                </td>
+
+                <!-- Phone -->
+
+                <td>
+                    {{ employee.phone }}
+                </td>
+
+                <!-- Department -->
+
+                <td>
+
+                    <span class="department-badge">
+
+                        {{ employee.department }}
+
+                    </span>
+
+                </td>
+
+                <!-- Salary -->
+
+                <td>
+
+                    <span class="salary">
+
+                        Rs. {{ employee.salary | number }}
+
+                    </span>
+
+                </td>
+
+                <!-- Action -->
+
+                <td>
+
+                    <div class="action-buttons">
+
+                        <button
+                            class="view-btn"
+                            (click)="viewEmployee(employee)">
+                            👁 View
+                        </button>
+
+                        @if(isAdmin){
+
+                       <button
+                           class="edit-btn"
+                            (click)="editEmployee(employee)">
+
+                            ✏ Edit
+
+                        </button>
+
+}
+
+                       @if(isAdmin){
+
+                        <button
+                            class="delete-btn"
+                            (click)="deleteEmployee(employee.id!)">
+
+                            🗑 Delete
+
+                        </button>
+
+}
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            }
+
+            @if(filteredEmployees.length===0){
+
+            <tr>
+
+                <td colspan="8">
+
+                    <div class="empty-state">
+
+                        <h3>
+
+                            😔 No Employees Found
+
+                        </h3>
+
+                        <p>
+
+                            Try another search keyword.
+
+                        </p>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            }
+
+        </tbody>
+
+    </table>
+
+    <div class="page-size">
+
+    <label>Show</label>
+
+    <select
+        [(ngModel)]="itemsPerPage"
+        (change)="changePageSize()">
+
+        @for (size of pageSizeOptions; track size) {
+
+            <option [value]="size">
+
+                {{ size }}
+
+            </option>
+
+        }
+
+    </select>
+
+    <span>records per page</span>
+
+    </div>
+
+    <div class="pagination">
+
+    <button
+        class="page-btn"
+        (click)="previousPage()"
+        [disabled]="currentPage === 1">
+
+        ◀ Previous
+
+    </button>
+
+    <span class="page-info">
+
+        Page {{ currentPage }} of {{ totalPages }}
+
+    </span>
+
+    <button
+        class="page-btn"
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages">
+
+        Next ▶
+
+    </button>
+
+</div>
+
+</div>
+
+<div class="dashboard-footer">
+
+    <span>
+
+        © 2026 Employee Management Dashboard
+
+    </span>
+
+    <span>
+
+        Developed with ❤️ using Angular 20
+
+    </span>
+
+</div>
+
+</div>
+
+@if(showViewModal && selectedEmployee){
+
+<div class="view-modal-overlay">
+
+  <div class="view-modal">
+
+    <h2>Employee Details</h2>
+
+    <img
+      [src]="selectedEmployee.photo || 'https://via.placeholder.com/120'"
+      class="view-photo">
+
+    <p><strong>ID:</strong> {{ selectedEmployee.id }}</p>
+
+    <p><strong>Name:</strong> {{ selectedEmployee.name }}</p>
+
+    <p><strong>Department:</strong> {{ selectedEmployee.department }}</p>
+
+    <p><strong>Salary:</strong>
+      Rs. {{ selectedEmployee.salary | number }}
+    </p>
+
+    <button
+      class="close-btn"
+      (click)="closeViewModal()">
+      Close
+    </button>
+
+  </div>
+
+</div>
+
+}

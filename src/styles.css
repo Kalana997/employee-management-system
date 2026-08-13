@@ -1,1 +1,625 @@
-/* You can add global styles to this file, and also import other style files */
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100%;
+    overflow-x:hidden;
+    font-family:'Poppins',sans-serif;
+    background:#020617;
+    color:#ffffff;
+    transition:.4s;
+}
+
+body{
+
+    background:
+    radial-gradient(circle at 20% 20%,rgba(59,130,246,.30),transparent 30%),
+    radial-gradient(circle at 80% 30%,rgba(168,85,247,.25),transparent 30%),
+    radial-gradient(circle at 50% 80%,rgba(14,165,233,.25),transparent 30%),
+    linear-gradient(135deg,#020617,#071329,#081b38,#04172c);
+
+    background-size:300% 300%;
+
+    animation:backgroundFlow 18s ease infinite;
+
+}
+
+.light-theme{
+
+    background:
+
+    linear-gradient(135deg,#eef4ff,#dde9ff,#f8fbff);
+
+    color:#111827;
+
+}
+
+*{
+
+    box-sizing:border-box;
+
+}
+
+a{
+
+    text-decoration:none;
+
+    color:inherit;
+
+}
+
+button{
+
+    font-family:'Poppins',sans-serif;
+
+}
+
+input{
+
+    font-family:'Poppins',sans-serif;
+
+}
+
+::selection{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#0f172a;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#2563eb;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#3b82f6;
+
+}
+
+.background-glow{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    pointer-events:none;
+
+    z-index:-2;
+
+}
+
+.background-glow::before{
+
+    content:'';
+
+    position:absolute;
+
+    width:420px;
+
+    height:420px;
+
+    border-radius:50%;
+
+    top:-120px;
+
+    left:-120px;
+
+    background:rgba(37,99,235,.25);
+
+    filter:blur(90px);
+
+    animation:floatOne 14s ease-in-out infinite;
+
+}
+
+.background-glow::after{
+
+    content:'';
+
+    position:absolute;
+
+    width:500px;
+
+    height:500px;
+
+    border-radius:50%;
+
+    bottom:-180px;
+
+    right:-150px;
+
+    background:rgba(124,58,237,.22);
+
+    filter:blur(110px);
+
+    animation:floatTwo 18s ease-in-out infinite;
+
+}
+
+body::before{
+
+    content:'';
+
+    position:fixed;
+
+    inset:0;
+
+    background-image:
+
+    linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+
+    linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+
+    background-size:45px 45px;
+
+    pointer-events:none;
+
+    z-index:-3;
+
+}
+
+body::after{
+
+    content:'';
+
+    position:fixed;
+
+    inset:0;
+
+    background:linear-gradient(
+
+        to bottom,
+
+        rgba(255,255,255,.02),
+
+        transparent,
+
+        rgba(255,255,255,.02)
+
+    );
+
+    pointer-events:none;
+
+    z-index:-4;
+
+}
+
+@keyframes backgroundFlow{
+
+    0%{
+
+        background-position:0% 50%;
+
+    }
+
+    50%{
+
+        background-position:100% 50%;
+
+    }
+
+    100%{
+
+        background-position:0% 50%;
+
+    }
+
+}
+
+@keyframes floatOne{
+
+    0%{
+
+        transform:translate(0,0) scale(1);
+
+    }
+
+    50%{
+
+        transform:translate(120px,70px) scale(1.25);
+
+    }
+
+    100%{
+
+        transform:translate(0,0) scale(1);
+
+    }
+
+}
+
+@keyframes floatTwo{
+
+    0%{
+
+        transform:translate(0,0) scale(1);
+
+    }
+
+    50%{
+
+        transform:translate(-140px,-80px) scale(1.2);
+
+    }
+
+    100%{
+
+        transform:translate(0,0) scale(1);
+
+    }
+
+}
+
+.fade-in{
+
+    animation:fadeIn .6s ease;
+
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+.light-theme .employee-container{
+
+    background:rgba(255,255,255,.82);
+
+    border:1px solid rgba(0,0,0,.08);
+
+    box-shadow:0 20px 60px rgba(0,0,0,.12);
+
+}
+
+.light-theme .header h1{
+
+    color:#111827;
+
+}
+
+.light-theme .subtitle{
+
+    color:#4b5563;
+
+}
+
+.light-theme .dashboard-card{
+
+    background:rgba(255,255,255,.92);
+
+    color:#111827;
+
+    border:1px solid rgba(0,0,0,.08);
+
+}
+
+.light-theme .dashboard-card h3{
+
+    color:#6b7280;
+
+}
+
+.light-theme .dashboard-card h2{
+
+    color:#111827;
+
+}
+
+.light-theme .search-box input{
+
+    background:#ffffff;
+
+    color:#111827;
+
+    border:1px solid #d1d5db;
+
+}
+
+.light-theme .clock-card{
+
+    background:#ffffff;
+
+    border:1px solid #d1d5db;
+
+}
+
+.light-theme .clock-card h4{
+
+    color:#111827;
+
+}
+
+.light-theme table{
+
+    background:#ffffff;
+
+}
+
+.light-theme td{
+
+    background:#ffffff;
+
+    color:#111827;
+
+}
+
+.light-theme tbody tr:hover{
+
+    background:#eff6ff;
+
+}
+
+.light-theme .add-form{
+
+    background:#ffffff;
+
+    border:1px solid #d1d5db;
+
+}
+
+.light-theme .add-form h2{
+
+    color:#111827;
+
+}
+
+.light-theme .form-group label{
+
+    color:#111827;
+
+}
+
+.light-theme .form-group input{
+
+    background:#ffffff;
+
+    color:#111827;
+
+    border:1px solid #d1d5db;
+
+}
+
+.glass{
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(16px);
+
+    border:1px solid rgba(255,255,255,.15);
+
+}
+
+.shadow-hover{
+
+    transition:.35s;
+
+}
+
+.shadow-hover:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:0 20px 45px rgba(0,0,0,.25);
+
+}
+
+.rounded-xl{
+
+    border-radius:20px;
+
+}
+
+.text-gradient{
+
+    background:linear-gradient(90deg,#38bdf8,#8b5cf6);
+
+    -webkit-background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+
+    background-clip:text;
+
+}
+
+@media(max-width:992px){
+
+    body{
+
+        font-size:15px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    body{
+
+        font-size:14px;
+
+    }
+
+}
+
+*{
+
+    transition:
+
+    background-color .3s,
+
+    color .3s,
+
+    border-color .3s,
+
+    box-shadow .3s,
+
+    transform .3s;
+
+}
+
+body.dark-theme{
+
+    color:#ffffff;
+
+}
+
+body.light-theme{
+
+    color:#111827;
+
+}
+
+body.dark-theme .login-card,
+body.dark-theme .employee-container{
+
+    background:rgba(15,23,42,.82);
+
+    border:1px solid rgba(255,255,255,.10);
+
+}
+
+body.light-theme .login-card,
+body.light-theme .employee-container{
+
+    background:rgba(255,255,255,.90);
+
+    border:1px solid rgba(15,23,42,.08);
+
+}
+
+body.dark-theme .login-header h1,
+body.dark-theme .welcome-section h2,
+body.dark-theme .form-group label{
+
+    color:#ffffff;
+
+}
+
+body.light-theme .login-header h1,
+body.light-theme .welcome-section h2,
+body.light-theme .form-group label{
+
+    color:#111827;
+
+}
+
+body.dark-theme .login-header p,
+body.dark-theme .welcome-section p,
+body.dark-theme .remember-me,
+body.dark-theme .security-item,
+body.dark-theme .login-footer p{
+
+    color:#cbd5e1;
+
+}
+
+body.light-theme .login-header p,
+body.light-theme .welcome-section p,
+body.light-theme .remember-me,
+body.light-theme .security-item,
+body.light-theme .login-footer p{
+
+    color:#475569;
+
+}
+
+body.dark-theme .input-group input{
+
+    background:rgba(255,255,255,.08);
+
+    color:#ffffff;
+
+    border:1px solid rgba(255,255,255,.12);
+
+}
+
+body.light-theme .input-group input{
+
+    background:#ffffff;
+
+    color:#111827;
+
+    border:1px solid #d1d5db;
+
+}
+
+body.light-theme .input-group input::placeholder{
+
+    color:#94a3b8;
+
+}
+
+body.light-theme .input-icon{
+
+    color:#64748b;
+
+}
+
+body.light-theme .password-toggle{
+
+    color:#334155;
+
+}
+
+body.light-theme .theme-btn{
+
+    background:#f1f5f9;
+
+    color:#111827;
+
+}
+
+body.light-theme .divider span{
+
+    color:#64748b;
+
+}
+
+body.light-theme .forgot-password{
+
+    color:#2563eb;
+
+}
+
+body.light-theme .login-btn{
+
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+
+    color:#ffffff;
+
+}
