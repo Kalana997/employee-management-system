@@ -42,3 +42,21 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# ================================
+# .NET Backend
+# ================================
+
+# Build output
+backend/**/bin/
+backend/**/obj/
+
+backend/**/appsettings.json
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# ASP.NET local development
+backend/**/Properties/ServiceDependencies/
